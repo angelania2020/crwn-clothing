@@ -3,6 +3,8 @@ import { initializeApp } from 'firebase/app';
 // Auth service
 import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+
 // Your web app's Firebase configuration
 // Config allows us to make FB CRUD actions to our own instance of FB
 const firebaseConfig = {
@@ -25,3 +27,43 @@ provider.setCustomParameters({
 
 export const auth = getAuth();
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
+
+// Create DB (Singleton instance)
+export const db = getFirestore();
+
+export const createUserDocumentFromAuth = async (userAuth) => {
+    // Gives document reference
+    const userDocRef = doc(db, 'users', userAuth.uid);
+
+    // console.log(userDocRef);
+
+    // Data, object
+    const userSnapshop = await getDoc(userDocRef);
+
+    // console.log(userSnapshop);
+
+    // Check if data and reference exist in DB
+    // console.log(userSnapshop.exists());
+
+    // if user data exists
+    // return userDocRef
+    if (!userSnapshop.exists()) {
+        const { displayName, email } = userAuth;
+        const createdAt = new Date();
+
+        try {
+            await setDoc(userDocRef, {
+                displayName,
+                email,
+                createdAt
+            });
+        } catch (error) {
+            console.log('error creating the user', error.message)
+        }
+    }
+
+
+    // if user data does not exist
+    // create / set the document with the data from userAuth in my collection
+    return userDocRef;
+};
