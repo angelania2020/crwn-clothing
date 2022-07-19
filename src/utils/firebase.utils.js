@@ -25,13 +25,15 @@ googleProvider.setCustomParameters({
     prompt: "select_account"
 });
 
-export const auth = getAuth();
+export const auth = getAuth(); // Singleton
 export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
 export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
 
 // Create DB (Singleton instance)
 export const db = getFirestore();
 
+
+// Method
 export const createUserDocumentFromAuth = async (userAuth) => {
     // Gives document reference
     const userDocRef = doc(db, 'users', userAuth.uid);
@@ -46,9 +48,10 @@ export const createUserDocumentFromAuth = async (userAuth) => {
     // Check if data and reference exist in DB
     // console.log(userSnapshop.exists());
 
-    // if user data exists
-    // return userDocRef
+
     if (!userSnapshop.exists()) {
+        // if user data does not exist
+        // create / set the document with the data from userAuth in my collection
         const { displayName, email } = userAuth;
         const createdAt = new Date();
 
@@ -63,8 +66,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
         }
     }
 
-
-    // if user data does not exist
-    // create / set the document with the data from userAuth in my collection
+    // if user data exists
+    // return userDocRef
     return userDocRef;
 };
