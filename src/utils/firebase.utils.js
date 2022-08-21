@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 // Auth service
-import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
@@ -86,3 +86,6 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 
 // Interface layer functions
 export const signOutUser = async () => await signOut(auth);
+
+// Observer listener, returns back what it gets from onAuthStateChanged
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback); // open listener
