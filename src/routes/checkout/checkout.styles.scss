@@ -1,0 +1,32 @@
+.checkout-container {
+  width: 65%; // was 55%
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px auto 0;
+
+  .checkout-header {
+    width: 100%;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid darkgrey;
+
+    .header-block {
+      text-transform: capitalize;
+      width: 23%;
+
+      &:last-child {
+        width: 8%;
+      }
+    }
+  }
+
+  .total {
+    margin-top: 30px;
+    // Now I want to push that item to the far right. That’s where auto margins come in. If I put a margin-left: auto; on it, it’ll push as far away as it possibly can on that row.
+    margin-left: auto;
+    font-size: 36px;
+  }
+}
