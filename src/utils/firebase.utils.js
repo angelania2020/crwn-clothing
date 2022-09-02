@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app';
 // Auth service
 import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 // Config allows us to make FB CRUD actions to our own instance of FB
@@ -32,6 +32,18 @@ export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googlePro
 // Create DB (Singleton instance)
 export const db = getFirestore();
 
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = collection(db, collectionKey);
+    const batch = writeBatch(db); // batch instance
+
+    objectsToAdd.forEach((object) => {
+        const docRef = doc(collectionRef, object.title.toLowerCase());
+        batch.set(docRef, object);
+    });
+
+    await batch.commit();
+    console.log('done');
+};
 
 // Method
 export const createUserDocumentFromAuth = async (userAuth, additionalInformation) => {
